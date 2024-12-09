@@ -31,8 +31,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="DeepLink.github.io"
-                    android:path="/music"
+                    android:host="filipelutz.github.io"
+                    android:pathPrefix="/DeepLink/music"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
@@ -42,8 +42,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="DeepLink.github.io"
-                    android:path="/music"
+                    android:host="filipelutz.github.io"
+                    android:pathPrefix="/DeepLink/music"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
