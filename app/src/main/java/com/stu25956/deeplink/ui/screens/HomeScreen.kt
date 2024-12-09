@@ -26,9 +26,10 @@ import androidx.navigation.NavController
 fun HomeScreen(navController: NavController) {
 
     Scaffold{
-
+        // Top App Bar
         TopAppBar(
             title = {
+                // Title of the Top App Bar
                 Text(
                     text = "Home Screen",
                     fontSize = 24.sp,
@@ -39,21 +40,24 @@ fun HomeScreen(navController: NavController) {
             }
         )
     }
-
+    // Column to align the button in the center of the screen
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize(),
     ){
+        // Button to navigate to the Music Screen
         Button(
             modifier = Modifier
                 .height(55.dp)
                 .width(250.dp),
+            // Navigate to the Music Screen
             onClick = {
                 navController.navigate("music")
             }
         ) {
+            // Text of the Button
             Text(
                 text = "Go to Music Player",
                 fontSize = 20.sp,
