@@ -1,5 +1,6 @@
 package com.stu25956.deeplink
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,8 +12,7 @@ import androidx.navigation.navDeepLink
 import com.stu25956.deeplink.ui.screens.HomeScreen
 import com.stu25956.deeplink.ui.screens.MusicScreen
 import com.stu25956.deeplink.ui.theme.DeepLinkTheme
-import android.content.Intent
-import android.net.Uri
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
             DeepLinkTheme {
 
                 val navController = rememberNavController()
-                val uri = "https://filipelutz.github.io/DepLink/music"
 
                 NavHost(
                     navController = navController,
@@ -35,7 +34,8 @@ class MainActivity : ComponentActivity() {
                         route = "music",
                         deepLinks = listOf(
                             navDeepLink {
-                                uriPattern = uri
+                                uriPattern = "https://github.com/FilipeLutz/DeepLink/"
+                                action = Intent.ACTION_VIEW
                             }
                         )
                     ) {

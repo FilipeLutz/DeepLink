@@ -23,6 +23,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DeepLink">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -30,8 +34,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="filipelutz.github.io"
-                    android:pathPrefix="/DeepLink/music"
+                    android:host="github.com/FilipeLutz/DeepLink/"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
@@ -41,8 +44,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="filipelutz.github.io"
-                    android:pathPrefix="/DeepLink/music"
+                    android:host="github.com/FilipeLutz/DeepLink/"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
