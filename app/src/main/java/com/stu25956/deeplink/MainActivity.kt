@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             DeepLinkTheme {
 
                 val navController = rememberNavController()
-                val uri = "https://www.stu25956.com"
+                val uri = "https://DeepLink.github.io/music"
 
                 NavHost(
                     navController = navController,

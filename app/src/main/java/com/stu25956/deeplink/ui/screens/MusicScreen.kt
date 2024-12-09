@@ -29,17 +29,20 @@ import kotlinx.coroutines.delay
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+// Music Screen Composable
 @Composable
 fun MusicScreen(navController: NavController) {
+    // List of songs to be played
     val songs = listOf(
         Triple("All I Want for Christmas Is You", "Mariah Carey", R.raw.christmas),
         Triple("Ghost Town", "Benson Boone", R.raw.ghost),
         Triple("Levitating", "Dua Lipa", R.raw.levitating),
         Triple("Save Your Tears", "The Weeknd", R.raw.save_your_tears),
-        Triple("Stay", "The Kid LAROI", R.raw.stay)
+        Triple("Stay", "The Kid Laroi, Justin Bieber", R.raw.stay)
     )
-
+    // Get the current context
     val context = LocalContext.current
+    // State variable to manage the list scroll position
     val listState = rememberLazyListState()
 
     // State variables for playback
@@ -47,53 +50,67 @@ fun MusicScreen(navController: NavController) {
     var currentSongIndex by remember { mutableIntStateOf(0) }
     var currentProgress by remember { mutableFloatStateOf(0f) }
     var totalDuration by remember { mutableIntStateOf(0) }
+    // Media Player instance to play songs
     var mediaPlayer by remember {
         mutableStateOf(
-            MediaPlayer.create(context, songs[currentSongIndex].third).apply {
+            MediaPlayer.create(
+                context, songs[currentSongIndex].third
+            ).apply {
                 setOnPreparedListener {
                     totalDuration = duration
                 }
             }
         )
     }
-
+    // Function to handle moving to the next track
     LaunchedEffect(isPlaying) {
-        while (isPlaying && mediaPlayer?.isPlaying == true) {
-            currentProgress = mediaPlayer!!.currentPosition.toFloat() / totalDuration
+        while (
+            isPlaying && mediaPlayer?.isPlaying == true
+        ) {
+            currentProgress = mediaPlayer!!
+                .currentPosition.toFloat() / totalDuration
             delay(100)
         }
     }
 
+    // Function to switch to a new song
     fun switchSong(index: Int) {
         if (index in songs.indices) {
             mediaPlayer?.release()
             mediaPlayer = MediaPlayer.create(context, songs[index].third).apply {
                 setOnPreparedListener {
                     totalDuration = duration
-                    if (isPlaying) start()
+                    start()
                 }
             }
             currentSongIndex = index
+            isPlaying = true
+            currentProgress = 0f
         }
     }
 
+    // Function to play the next song
     fun playNextSong() {
         val nextIndex = if (currentSongIndex + 1 < songs.size) currentSongIndex + 1 else 0
         switchSong(nextIndex)
-        mediaPlayer?.start()
-        isPlaying = true
+        if (isPlaying) {
+            mediaPlayer?.start()
+        }
     }
-
+    // Main UI for the Music Player
     Scaffold(
+        // Top App Bar
         topBar = {
             TopAppBar(
                 navigationIcon = {
+                    // Back button to navigate back to the Home Screen
                     IconButton(
                         onClick = {
                             if (mediaPlayer?.isPlaying == true) mediaPlayer?.stop()
                             navController.popBackStack()
                         }
                     ) {
+                        // Back Icon
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -101,39 +118,49 @@ fun MusicScreen(navController: NavController) {
                         )
                     }
                 },
-                title = { Text("Music Player") }
+                // Title of the Music Player Screen
+                title = {
+                    Text(
+                        "Music Player",
+                        fontSize = 24.sp,
+                    )
+                }
             )
         }
     ) { innerPadding ->
+        // Main Column to hold the Media Player UI and the Music List
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(10.dp)
         ) {
-            // Central Media Player UI Section
+            // Card to display the current song details
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                elevation = CardDefaults
+                    .cardElevation(defaultElevation = 8.dp)
             ) {
+                // Column to hold the song details
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
+                    // Song Title
                     Text(
                         text = songs[currentSongIndex].first,
-                        fontSize = 25.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
-
+                    // Song Artist
                     Text(
                         text = "by ${songs[currentSongIndex].second}",
                         fontSize = 18.sp,
@@ -141,18 +168,21 @@ fun MusicScreen(navController: NavController) {
                     )
 
                     Spacer(modifier = Modifier.height(25.dp))
-
+                    // Row to hold the playback controls
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                     ) {
-
+                        // Previous Song Button
                         IconButton(
                             modifier = Modifier
                                 .background(
                                     Color.DarkGray,
-                                    shape = CircleShape),
+                                    shape = CircleShape
+                                ),
+                            // Switch to the previous song
                             onClick = {
                                 if (currentSongIndex > 0) {
                                     switchSong(currentSongIndex - 1)
@@ -160,15 +190,17 @@ fun MusicScreen(navController: NavController) {
                                 }
                             }
                         ) {
+                            // Previous Icon
                             Icon(
                                 imageVector = Icons.Filled.SkipPrevious,
                                 contentDescription = "Previous Song",
                                 tint = Color.White
                             )
                         }
-
+                        // Play/Pause Button
                         IconButton(
                             onClick = {
+                                // Play or Pause the current song
                                 if (isPlaying) {
                                     mediaPlayer?.pause()
                                 } else {
@@ -178,24 +210,35 @@ fun MusicScreen(navController: NavController) {
                             },
                             modifier = Modifier
                                 .size(60.dp)
-                                .background(Color.Blue, shape = CircleShape)
+                                .background(
+                                    Color.Blue,
+                                    shape = CircleShape
+                                )
                         ) {
+                            // Play/Pause Icon
                             Icon(
-                                imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause" else "Play",
+                                imageVector =
+                                if (isPlaying) Icons.Filled.Pause
+                                else Icons.Filled.PlayArrow,
+                                contentDescription =
+                                if (isPlaying) "Pause"
+                                else "Play",
                                 tint = Color.White
                             )
                         }
-
+                        // Next Song Button
                         IconButton(
                             modifier = Modifier
                                 .background(
                                     Color.DarkGray,
-                                    shape = CircleShape),
+                                    shape = CircleShape
+                                ),
+                            // Switch to the next song
                             onClick = {
                                 playNextSong()
                             }
                         ) {
+                            // Next Icon
                             Icon(
                                 imageVector = Icons.Filled.SkipNext,
                                 contentDescription = "Next Song",
@@ -206,31 +249,71 @@ fun MusicScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Handle automatic reset and playback logic on song completion
+                    mediaPlayer?.setOnCompletionListener {
+                        // Play the next song when the current song ends
+                        val nextIndex =
+                            // Play the first song if the current song is the last one
+                            if (currentSongIndex + 1 < songs.size)
+                                currentSongIndex + 1 else 0
+                        // Switch to the next song
+                        switchSong(nextIndex)
+                    }
+
+                    // Handle playback slider progress and media player synchronization
+                    LaunchedEffect(isPlaying, totalDuration) {
+                        // Poll the media player for playback progress
+                        while (true) {
+                            // Update the playback progress if the song is playing
+                            if (mediaPlayer != null
+                                && isPlaying
+                                && mediaPlayer!!.isPlaying
+                            ) {
+                                // Update the playback progress
+                                currentProgress =
+                                    mediaPlayer!!.currentPosition
+                                        .toFloat() / totalDuration
+                            }
+                            // Delay to avoid excessive polling
+                            delay(100)
+                        }
+                    }
+
+                    // Slider to control progress and show accurate playback progress
                     Slider(
+                        // Customize the slider colors
                         colors = SliderDefaults.colors(
                             thumbColor = Color.Blue,
                             activeTrackColor = Color.Blue,
                             inactiveTrackColor = Color.Gray
                         ),
-                        value = if (totalDuration > 0) currentProgress else 0f,
+                        // Set the slider value to the current progress
+                        value = currentProgress,
+                        // Update the media player position on value change
                         onValueChange = { newValue ->
+                            // Update the media player position
                             if (totalDuration > 0) {
-                                mediaPlayer?.seekTo((newValue * totalDuration).toInt())
+                                // Calculate the new position based on the slider value
+                                val newPosition = (newValue * totalDuration).toInt()
+                                mediaPlayer?.seekTo(newPosition)
                                 currentProgress = newValue
                             }
                         },
+                        // Set the value range from 0 to 1
                         valueRange = 0f..1f,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(5.dp))
 
+                    // Text to display the current playback progress
                     Text(
-                        text = "${formatTime((totalDuration * currentProgress).toInt())} / ${
-                            formatTime(
-                                totalDuration
-                            )
+                        // Format the playback progress and total duration
+                        text =
+                        "${formatTime((currentProgress * totalDuration).toInt())} / ${
+                            formatTime(totalDuration)
                         }",
                         fontSize = 18.sp,
                         color = Color.Gray
@@ -239,71 +322,91 @@ fun MusicScreen(navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(15.dp))
-
+            // Text to display the Music List title
             Text(
-                text = "Songs List",
+                text = "Music List",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray
             )
-
+            // Text to display the Music List description
             Text(
                 text = "Click on a song to play",
                 fontSize = 18.sp,
                 color = Color.Gray
             )
-
-           LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    itemsIndexed(songs) { index, song ->
-                        Card(
+            // Lazy Column to display the list of songs
+            LazyColumn(
+                // Remember the scroll state to maintain position
+                state = listState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.5f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Iterate over the list of songs
+                itemsIndexed(songs) { index, song ->
+                    // Card to display the song details
+                    Card(
+                        modifier = Modifier
+                            .padding(
+                                start = 10.dp,
+                                end = 10.dp,
+                                top = 14.dp,
+                                bottom =
+                                if (index == songs.lastIndex) 14.dp
+                                else 0.dp
+                            )
+                            .fillMaxWidth()
+                            .height(70.dp)
+                            // Play the selected song on click
+                            .clickable {
+                                switchSong(index)
+                                mediaPlayer?.start()
+                                isPlaying = true
+                            },
+                        // Customize the card elevation
+                        elevation = CardDefaults
+                            .cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        // Row to hold the song details
+                        Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(70.dp)
-                                .clickable {
-                                    switchSong(index); mediaPlayer?.start(); isPlaying = true
-                                },
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column {
-                                    Text(
-                                        text = song.first,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 24.sp
-                                    )
-                                    Text(
-                                        text = "by ${song.second}",
-                                        fontSize = 18.sp,
-                                        color = Color.Gray
-                                    )
-                                }
+                            // Column to hold the song index
+                            Column {
+                                // Song Title
+                                Text(
+                                    text = song.first,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp
+                                )
+                                // Song Artist
+                                Text(
+                                    text = "by ${song.second}",
+                                    fontSize = 18.sp,
+                                    color = Color.Gray
+                                )
                             }
                         }
                     }
                 }
             }
         }
-
+    }
+    // Dispose the media player when the screen is removed
     DisposableEffect(Unit) {
         onDispose {
-            if (mediaPlayer?.isPlaying == true) mediaPlayer?.stop()
-            mediaPlayer?.release()
+            // Release the media player resources
+            if (mediaPlayer?.isPlaying == true)
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
         }
     }
 }
-
+// Function to format the time in minutes and seconds
 @SuppressLint("DefaultLocale")
 fun formatTime(millis: Int): String {
     val seconds = millis / 1000
