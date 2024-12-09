@@ -35,7 +35,7 @@
                 <data
                     android:scheme="https"
                     android:host="filipelutz.github.io"
-                    android:path="/DeepLink"
+                    android:path="/DeepLink/music"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
@@ -46,7 +46,7 @@
                 <data
                     android:scheme="http"
                     android:host="filipelutz.github.io"
-                    android:path="/DeepLink"
+                    android:path="/DeepLink/music"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
 

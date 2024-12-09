@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         route = "music",
                         deepLinks = listOf(
                             navDeepLink {
-                                uriPattern = "https://filipelutz.github.io/DeepLink"
+                                uriPattern = "https://filipelutz.github.io/DeepLink/music"
                                 action = Intent.ACTION_VIEW
                             }
                         )
