@@ -11,6 +11,8 @@ import androidx.navigation.navDeepLink
 import com.stu25956.deeplink.ui.screens.HomeScreen
 import com.stu25956.deeplink.ui.screens.MusicScreen
 import com.stu25956.deeplink.ui.theme.DeepLinkTheme
+import android.content.Intent
+import android.net.Uri
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +22,7 @@ class MainActivity : ComponentActivity() {
             DeepLinkTheme {
 
                 val navController = rememberNavController()
-                val uri = "https://filipelutz.github.io/DeepLink"
+                val uri = "https://filipelutz.github.io/DepLink/music"
 
                 NavHost(
                     navController = navController,
