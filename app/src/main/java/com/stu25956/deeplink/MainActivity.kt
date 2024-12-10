@@ -1,5 +1,13 @@
 package com.stu25956.deeplink
 
+/*
+Filipe Lutz Mariano 25956
+Assignment 8
+
+Module: Mobile App Development 2
+Lecturer: Eugene Oregan
+*/
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
