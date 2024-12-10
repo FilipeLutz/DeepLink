@@ -57,7 +57,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.material.icons.extended)
-    implementation ("androidx.compose.runtime:runtime-livedata:1.7.5")
+    implementation (libs.androidx.runtime.livedata)
 
     implementation(libs.androidx.navigation.compose)
     implementation (libs.androidx.media3.exoplayer)
